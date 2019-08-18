@@ -1,8 +1,11 @@
 import tkinter as tk
-from tkEditor import tkEditor
+
 import xml.etree.ElementTree as ET
 
 from tkWindow import tkWindow
+
+from dynamic_xml.XMLFile import XMLFile
+
 
 #----------------------------------------------------------------------------------------------------------------------
 # indent
@@ -245,7 +248,7 @@ class tkApplication(object):
     #------------------------------------------------------------------------------------------------------------------
     # addFrameToWindow
     #__________________________________________________________________________________________________________________
-    def addFrameToWindow(self, windowName, framePath, x, y, w, h):
+    def addFrameToWindow(self, windowName, framePath, pos):
         
         win = self.getWindow(windowName)
 
@@ -254,7 +257,7 @@ class tkApplication(object):
             return False
 
         # add the item to the window
-        return win.addFrame(itemName, framePath, x, y, w, h)
+        return win.addFrame(framePath, pos)
         
     #------------------------------------------------------------------------------------------------------------------
     # configureFrameInWindow
@@ -307,17 +310,22 @@ class tkApplication(object):
     # loadXML
     #__________________________________________________________________________________________________________________
     def loadXML(self, fullPathToFile):
-        tree = ET.parse(fullPathToFile)
-        root = tree.getroot()
+        self.__xml = XMLFile(fullPathToFile, 'src/XML/Root.json')
+
+        #tree = ET.parse(fullPathToFile)
+        root = self.__xml.getRoot()
 
         # run through the window list
-        windows = root.findall('Window')
+       # windows = root.findall('Window')
 
-        for window in windows:
-            
-            name = window.get('name')
+        #for window in windows:
+        for window in root.getWindows():
+            '''name = window.get('name')
             xsize = int(window.get('xsize'))
-            ysize = int(window.get('ysize'))
+            ysize = int(window.get('ysize'))'''
+            name = window.getAttributeName()
+            xsize = int(window.getAttributeXsize())
+            ysize = int(window.getAttributeYsize())
 
             if name == tkApplication.MAIN_WINDOW:
                 tkW = self._mainWindow
@@ -335,7 +343,7 @@ class tkApplication(object):
         root = ET.Element('root')
 
         # now, iterate over each window and ask them to save
-        for key, window in self._tkWindows.items():
+        for _, window in self._tkWindows.items():
             window.saveXML(root)
 
         # get the tree

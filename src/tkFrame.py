@@ -137,7 +137,7 @@ class tkFrame(tk.Frame):
                 return False
 
             # create the frame
-            self._dictTkFrames[name] = tkFrame(toplevel, self, pos)
+            self._dictTkFrames[toplevel] = tkFrame(toplevel, self, self, pos)
         else:
 
             # we expect this to exist
@@ -165,7 +165,7 @@ class tkFrame(tk.Frame):
 
         # we should at least have toplevel in our tkframes dict
         if toplevel not in self._dictTkFrames.keys():
-            print (f'Unknown item: "{itemName}" in frame "{self._name}"')
+            print (f'Unknown item: "{toplevel}" in frame "{self._name}"')
             return None
 
         # only one token in path, just return this frame
@@ -188,7 +188,7 @@ class tkFrame(tk.Frame):
 
         # there is more to the path
         if path != '':
-            numTokens, toplevel, subpath = tkHelper.analyzePath(framePath)
+            numTokens, toplevel, subpath = tkHelper.analyzePath(path)
 
             # our toplevel is in our dict
             if toplevel in self._dictTkFrames.keys():
@@ -243,7 +243,7 @@ class tkFrame(tk.Frame):
                 print (f'Unknown Frame {toplevel} in frame {self._name}')
                 return False
 
-            self._dictTkFrames.addItem(subpath, itemName, itemType, pos)
+            self._dictTkFrames[toplevel].addItem(subpath, itemName, itemType, pos)
             
         return True
         
@@ -292,41 +292,25 @@ class tkFrame(tk.Frame):
             items.extend(value.getItems())
 
         return items
-    
-    #------------------------------------------------------------------------------------------------------------------
-    # getFrames
-    #__________________________________________________________________________________________________________________
-    def getFrames(self):
-        return self._dictTkFrames
 
-    '''
-        if len(self._dictTkFrames.items()) == 0:
-            return []
-
-        # get top level frames from the window
-        frames = [':'.join(value.getPath().split(':')[1:]) for key,value in self._dictTkFrames.items()]
-
-        for key,value in self._dictTkFrames.items():
-            frames.extend(value.getFrames())
-
-        return frames
-    '''
     #------------------------------------------------------------------------------------------------------------------
     # loadXML
     #__________________________________________________________________________________________________________________
     def loadXML(self, frame):
         
         # iterate through all the things in this xml list
-        for child in frame:
+        for _,child in frame.getSubElements():
 
             # name should always exist
-            name    = child.get('name')
+            name    = child.getAttributeName()
             
             pos = placeData()
             pos.loadFromElement(child)
 
+            tag = child.getTag()
+
             # we are creating a new frame
-            if child.tag == 'Frame':
+            if tag == 'Frame':
                 if name in self._dictTkFrames.keys():
                     print (f'Frame: {name} already in frame {self._name}')
                     continue
@@ -340,11 +324,11 @@ class tkFrame(tk.Frame):
             else:
 
                 # see if we support this
-                if child.tag not in tkHelper.nameToType.keys():
-                    print (f'{child.tag} is not support for frames')
+                if tag not in tkHelper.nameToType.keys():
+                    print (f'{tag} is not support for frames')
 
                 # we already have this thing on the gui, don't recreate
-                if self.addItem('', name, child.tag, pos):
+                if self.addItem('', name, tag, pos):
                     self._dictTkItems[name].loadXML(child)
 
     #------------------------------------------------------------------------------------------------------------------

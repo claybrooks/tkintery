@@ -1,0 +1,3 @@
+[submodule "dynamic_xml"]
+	path = dynamic_xml
+	url = https://github.com/claybrooks/dynamic_xml.git
