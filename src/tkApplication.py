@@ -59,7 +59,13 @@ class tkApplication(object):
         self._callbackPaths = {}
         self._callbackTypes = {}
 
+        self._updateCallbacks = []
+        self._updateRateInMs = 16
+
         self.loadXML(fullPathToFile)
+
+        self._root.after(self._updateRateInMs, self.__HandleUpdate)
+
 
     #------------------------------------------------------------------------------------------------------------------
     # _reportEvent
@@ -125,6 +131,26 @@ class tkApplication(object):
 
         self.registerCallback(path, typeFilter, callback)
 
+    #------------------------------------------------------------------------------------------------------------------
+    # registerUpdateCallback
+    #__________________________________________________________________________________________________________________
+    def registerUpdateCallback(self,callback):
+        self._updateCallbacks.append(callback)
+
+    #------------------------------------------------------------------------------------------------------------------
+    # setUpdateRate
+    #__________________________________________________________________________________________________________________
+    def setUpdateRate(self, updateRateInMs):
+        self._updateRateInMs = updateRateInMs
+
+    #------------------------------------------------------------------------------------------------------------------
+    # __HandleUpdate
+    #__________________________________________________________________________________________________________________
+    def __HandleUpdate(self):
+        for callback in self._updateCallbacks:
+            callback()
+
+        self._root.after(self._updateRateInMs, self.__HandleUpdate)
     #------------------------------------------------------------------------------------------------------------------
     # showWindow
     #__________________________________________________________________________________________________________________

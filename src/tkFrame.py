@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 
 from tkItem import tkItem
 from tkOptionMenu import tkOptionMenu
+from tkCheckbutton import tkCheckbutton
 
 from tkHelper import tkHelper
 from tkHelper import placeData
@@ -26,7 +27,6 @@ class tkFrame(tk.Frame):
         self._tkParent  = tkParent
         self._pos       = pos
 
-        
         # lets capture all of the possible default options we have, this makes resetting easier
         self._defaultOptions = {}
         for option in self.config().keys():
@@ -50,7 +50,8 @@ class tkFrame(tk.Frame):
         
         # some things require special constructors
         self._specialItems = {
-            'OptionMenu': tkOptionMenu,    
+            'OptionMenu': tkOptionMenu,   
+            'Checkbutton': tkCheckbutton, 
         }
         
         self.updatePosition(self._pos)
