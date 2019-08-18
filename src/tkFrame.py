@@ -299,38 +299,44 @@ class tkFrame(tk.Frame):
     #__________________________________________________________________________________________________________________
     def loadXML(self, frame):
         
-        # iterate through all the things in this xml list
-        for _,child in frame.getSubElements():
+        # iterate through all the frames
+        for child in frame.getFrames():
 
             # name should always exist
             name    = child.getAttributeName()
-            
+
+            if name in self._dictTkFrames.keys():
+                print (f'Frame: {name} already in frame {self._name}')
+                continue
+
             pos = placeData()
             pos.loadFromElement(child)
 
+            # create the new frame
+            self._dictTkFrames[name] = tkFrame(name, self, self, pos)
+
+            # pass along to the frame
+            self._dictTkFrames[name].loadXML(child)
+
+        # iterate through all the things in this xml list
+        for key,child in frame.subElements():
+
+            # ignore frames
+            if key == 'Frame':
+                continue
+                
+            name    = child.getAttributeName()
             tag = child.getTag()
 
-            # we are creating a new frame
-            if tag == 'Frame':
-                if name in self._dictTkFrames.keys():
-                    print (f'Frame: {name} already in frame {self._name}')
-                    continue
+            pos = placeData()
+            pos.loadFromElement(child)
 
-                # create the new frame
-                self._dictTkFrames[name] = tkFrame(name, self, self, pos)
+            # see if we support this
+            if tag not in tkHelper.nameToType.keys():
+                print (f'{tag} is not support for frames')
 
-                # pass along to the frame
-                self._dictTkFrames[name].loadXML(child)
-            # we should be doing tkItems in here
-            else:
-
-                # see if we support this
-                if tag not in tkHelper.nameToType.keys():
-                    print (f'{tag} is not support for frames')
-
-                # we already have this thing on the gui, don't recreate
-                if self.addItem('', name, tag, pos):
-                    self._dictTkItems[name].loadXML(child)
+            if self.addItem('', name, tag, pos):
+                self._dictTkItems[name].loadXML(child)
 
     #------------------------------------------------------------------------------------------------------------------
     # saveXML

@@ -1,0 +1,14 @@
+{
+    "elementTag":"Item",
+    
+    "isMulti":"True",
+
+    "subElements": {
+        
+    },
+    
+    "attributes": [
+        "name",
+        "type"
+    ]
+}

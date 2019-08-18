@@ -1,0 +1,13 @@
+{
+    "elementTag":"MenuBar",
+    
+    "isMulti":"False",
+
+    "subElements": {
+        "Dropdown": "src/XML/Dropdown.json"
+    },
+    
+    "attributes": [
+        "name"
+    ]
+}

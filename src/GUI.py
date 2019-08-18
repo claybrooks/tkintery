@@ -1,6 +1,6 @@
-from tkApplication import tkApplication
-from tkEditor import tkEditor
-from tkHelper import tkHelper
+from src.tkApplication import tkApplication
+from src.tkEditor import tkEditor
+from src.tkHelper import tkHelper
 
 import argparse
 import os
@@ -16,7 +16,8 @@ def runApp(args):
     if args.generateCode == True:
         tkHelper.generateCodeFromApplication(app)
 
-    editor = tkEditor(app)
+    if args.enableEditing:
+        editor = tkEditor(app)
 
     # now run our app
     app.getRoot().mainloop()
@@ -51,6 +52,7 @@ def main():
                          dest="enableEditing",
                          action='store_true', 
                          required=False,
+                         default=False,
                          help='Turns on editing ability for GUI')
 
     parser.add_argument('--generateCode',

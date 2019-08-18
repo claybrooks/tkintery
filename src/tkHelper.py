@@ -195,7 +195,7 @@ class tkHelper(object):
     #__________________________________________________________________________________________________________________
     @staticmethod
     def loadXML(ele, key, default=''):
-        value = ele.get(key)
+        value = ele.getAttribute(key)
 
         if value == None:
             if value in tkHelper._defaultXML.keys():
@@ -300,3 +300,31 @@ class placeData(object):
     def saveToElement(self, ele):
         for key,value in self._data.items():
             ele.set(key, f'{value}')
+
+#----------------------------------------------------------------------------------------------------------------------
+# indent
+#______________________________________________________________________________________________________________________
+def indent(elem, level=0, more_sibs=False):
+    tab='    '
+    i = "\n"
+    if level:
+        i += (level-1) * tab
+    num_kids = len(elem)
+    if num_kids:
+        if not elem.text or not elem.text.strip():
+            elem.text = i + tab
+            if level:
+                elem.text += tab
+        count = 0
+        for kid in elem:
+            indent(kid, level+1, count < num_kids - 1)
+            count += 1
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+            if more_sibs:
+                elem.tail += tab
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+            if more_sibs:
+                elem.tail += tab

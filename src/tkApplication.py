@@ -1,39 +1,11 @@
 import tkinter as tk
+import tkHelper
 
 import xml.etree.ElementTree as ET
 
 from tkWindow import tkWindow
 
 from dynamic_xml.XMLFile import XMLFile
-
-
-#----------------------------------------------------------------------------------------------------------------------
-# indent
-#______________________________________________________________________________________________________________________
-def indent(elem, level=0, more_sibs=False):
-    tab='    '
-    i = "\n"
-    if level:
-        i += (level-1) * tab
-    num_kids = len(elem)
-    if num_kids:
-        if not elem.text or not elem.text.strip():
-            elem.text = i + tab
-            if level:
-                elem.text += tab
-        count = 0
-        for kid in elem:
-            indent(kid, level+1, count < num_kids - 1)
-            count += 1
-        if not elem.tail or not elem.tail.strip():
-            elem.tail = i
-            if more_sibs:
-                elem.tail += tab
-    else:
-        if level and (not elem.tail or not elem.tail.strip()):
-            elem.tail = i
-            if more_sibs:
-                elem.tail += tab
 
 #----------------------------------------------------------------------------------------------------------------------
 # MainApplication
@@ -373,7 +345,7 @@ class tkApplication(object):
             window.saveXML(root)
 
         # get the tree
-        indent(root)
+        tkHelper.indent(root)
         tree = ET.ElementTree(root)
 
         tree.write('GUI.xml')

@@ -128,7 +128,7 @@ class tkWindow(object):
 
         # we should at least have toplevel in our tkframes dict
         if toplevel not in self._dictTkFrames.keys():
-            print (f'Unknown item: "{itemName}" in window "{self._name}"')
+            print (f'Unknown item: "{toplevel}" in window "{self._name}"')
             return None
 
         # only one token in path, just return this frame
@@ -183,7 +183,7 @@ class tkWindow(object):
         return self._menubar
 
     #------------------------------------------------------------------------------------------------------------------
-    # configureItem
+    # configureFrame
     #__________________________________________________________________________________________________________________
     def configureFrame(self, framePath, key, value):
         
@@ -199,7 +199,7 @@ class tkWindow(object):
             self._dictTkFrames[toplevel].configureItem(key, value)
         # we have a path with multiple tokens, pass along to tkFrame to handle
         else:
-            self._dicTkItems[itemName].configureItem(key, value, subpath)
+            self._dictTkFrames[toplevel].configureItem(key, value, subpath)
         
     #------------------------------------------------------------------------------------------------------------------
     # saveGUI
@@ -231,27 +231,26 @@ class tkWindow(object):
         self._name = name
 
         # build the geometry string
-        geoString = f'{xsize}x{ysize}'
+        #geoString = f'{xsize}x{ysize}'
 
         self._getWindow().geometry(f'{xsize}x{ysize}')
 
-        # iterate over all of the elements
-        for child in window:
+        # see if we have a menubar
+        if window.hasMenubar():
+            # create it
+            self._menubar = tkMenubar(self, window.getMenubar().getAttributeName())
 
-            # we are adding a menubar to this window
-            if child.tag == 'Menubar':
-                name = child.get('name')
+            #configure it
+            self._menubar.loadXML(window.getMenubar())
+        
+        # iterate over all of the frame
+        for frame in window.getFrames():
 
-                self._menubar = tkMenubar(self, name)
-                self._menubar.loadXML(child)
+            # retrieve metadata for the child
+            name = frame.getAttributeName()
 
-            # we are adding a frame to this window
-            elif child.tag == 'Frame':
-                # retrieve metadata for the child
-                name = child.get('name')
+            pos = placeData()
+            pos.loadFromElement(frame)
 
-                pos = placeData()
-                pos.loadFromElement(child)
-
-                if self.addFrame(name, pos) == True:
-                    self._dictTkFrames[name].loadXML(child)
+            if self.addFrame(name, pos) == True:
+                self._dictTkFrames[name].loadXML(frame)

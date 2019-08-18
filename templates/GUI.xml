@@ -59,7 +59,7 @@
                 </Frame>
             </Frame>
             <Frame height="162" name="reconfig" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" width="198" x="326" y="85">
-                <Entry height="22" name="configKey" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" width="171" x="0" y="10" codeName="configKey"/>
+                <Entry height="22" name="configKey" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" width="171" x="0" y="10"/>
                 <Entry height="23" name="configValue" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" width="166" x="2" y="42" />
                 <Button height="30" name="submitConfig" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" text="Submit" width="130" x="7" y="104" />
             </Frame>

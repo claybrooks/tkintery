@@ -1,0 +1,13 @@
+{
+    "elementTag":"Root",
+    
+    "isMulti":"False",
+
+    "subElements": {
+        "Window": "src/XML/Window.json"
+    },
+    
+    "attributes": [
+
+    ]
+}

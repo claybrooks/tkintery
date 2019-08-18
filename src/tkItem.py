@@ -157,9 +157,9 @@ class tkItem(object):
     #------------------------------------------------------------------------------------------------------------------
     # loadXML
     #__________________________________________________________________________________________________________________
-    def loadXML(self, ele):
+    def loadXML(self, item):
         # pass through the rest of the things from the xml
-        for key,value in ele.attrib.items():
+        for key,value in item.attributes():
             if key in tkHelper.ignoreList:
                 continue
 

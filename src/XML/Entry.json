@@ -1,0 +1,22 @@
+{
+    "elementTag":"Entry",
+    
+    "isMulti":"True",
+
+    "subElements": {
+
+    },
+    
+    "attributes": [
+        "background",
+        "name",
+        "height",
+        "width",
+        "relheight",
+        "relwidth",
+        "x",
+        "y",
+        "relx",
+        "rely"
+    ]
+}

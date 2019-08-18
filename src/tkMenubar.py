@@ -150,20 +150,21 @@ class tkMenubar(tk.Menu):
     #----------------------------------------------------------------------------------------------------------------------
     # loadGUI
     #______________________________________________________________________________________________________________________
-    def loadXML(self, toolbarData):
+    def loadXML(self, menubar):
         
-        dropdowns = toolbarData.findall('Dropdown')
+        for dropdown in menubar.getDropdowns():
 
-        for dropdown in dropdowns:
+            dropdownName = dropdown.getAttributeName()
 
-            dropdownName = dropdown.get('name')
-
-            saveOptions = dropdown.get('saveOptions')
-            if saveOptions == None:
-                saveOptions = True
+            saveOptions = True
+            if dropdown.hasAttributeSaveOptions():
+                string = dropdown.getAttributeSaveOptions()
+                saveOptions = True if (string == "True" or string == "true" or string == "1") else False
 
             dropdownItems = []
-            for child in dropdown:
-                dropdownItems.append([child.get('name'), child.get('type'), saveOptions])
+            for item in dropdown.getItems():
+                dropdownItems.append([item.getAttributeName(), 
+                                    item.getAttributeType(), 
+                                    saveOptions])
 
             self.addDropdown(dropdownName, dropdownItems)
