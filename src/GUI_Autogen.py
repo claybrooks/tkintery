@@ -1,117 +1,331 @@
 class AutoGen(object):
+    class Main(object):
+        class Frame(object):
+            def __init__(self):
+                self.name      = "Frame"
+                self.framePath = ""
+                self.fullPath  = "Main:Frame"
+        def __init__(self):
+            self.name      = "Main"
+            self.framePath = ""
+            self.fullPath  = "Main"
+            self.Frame = AutoGen.Main.Frame()
+    class ItemWindow(object):
+        class ItemSelection(object):
+            def __init__(self):
+                self.name      = "ItemSelection"
+                self.framePath = ""
+                self.fullPath  = "ItemWindow:ItemSelection"
+        def __init__(self):
+            self.name      = "ItemWindow"
+            self.framePath = ""
+            self.fullPath  = "ItemWindow"
+            self.ItemSelection = AutoGen.ItemWindow.ItemSelection()
+    class Editor(object):
+        class Frame(object):
+            class ItemSelection(object):
+                def __init__(self):
+                    self.name      = "ItemSelection"
+                    self.framePath = "Frame"
+                    self.fullPath  = "Editor:Frame:ItemSelection"
+            class placement(object):
+                class Stats(object):
+                    class label_x(object):
+                        def __init__(self):
+                            self.name      = "label_x"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:label_x"
+                    class label_y(object):
+                        def __init__(self):
+                            self.name      = "label_y"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:label_y"
+                    class label_width(object):
+                        def __init__(self):
+                            self.name      = "label_width"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:label_width"
+                    class label_height(object):
+                        def __init__(self):
+                            self.name      = "label_height"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:label_height"
+                    class entry_x(object):
+                        def __init__(self):
+                            self.name      = "entry_x"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:entry_x"
+                    class entry_y(object):
+                        def __init__(self):
+                            self.name      = "entry_y"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:entry_y"
+                    class entry_width(object):
+                        def __init__(self):
+                            self.name      = "entry_width"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:entry_width"
+                    class entry_height(object):
+                        def __init__(self):
+                            self.name      = "entry_height"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:entry_height"
+                    class coord_submit(object):
+                        def __init__(self):
+                            self.name      = "coord_submit"
+                            self.framePath = "Frame:placement:Stats"
+                            self.fullPath  = "Editor:Frame:placement:Stats:coord_submit"
+                    def __init__(self):
+                        self.name      = "Stats"
+                        self.framePath = "Frame:placement"
+                        self.fullPath  = "Editor:Frame:placement:Stats"
+                        self.label_x = AutoGen.Editor.Frame.placement.Stats.label_x()
+                        self.label_y = AutoGen.Editor.Frame.placement.Stats.label_y()
+                        self.label_width = AutoGen.Editor.Frame.placement.Stats.label_width()
+                        self.label_height = AutoGen.Editor.Frame.placement.Stats.label_height()
+                        self.entry_x = AutoGen.Editor.Frame.placement.Stats.entry_x()
+                        self.entry_y = AutoGen.Editor.Frame.placement.Stats.entry_y()
+                        self.entry_width = AutoGen.Editor.Frame.placement.Stats.entry_width()
+                        self.entry_height = AutoGen.Editor.Frame.placement.Stats.entry_height()
+                        self.coord_submit = AutoGen.Editor.Frame.placement.Stats.coord_submit()
+                class configure(object):
+                    class placeConfigKey(object):
+                        def __init__(self):
+                            self.name      = "placeConfigKey"
+                            self.framePath = "Frame:placement:configure"
+                            self.fullPath  = "Editor:Frame:placement:configure:placeConfigKey"
+                    class placeConfigValue(object):
+                        def __init__(self):
+                            self.name      = "placeConfigValue"
+                            self.framePath = "Frame:placement:configure"
+                            self.fullPath  = "Editor:Frame:placement:configure:placeConfigValue"
+                    class submitPlaceConfig(object):
+                        def __init__(self):
+                            self.name      = "submitPlaceConfig"
+                            self.framePath = "Frame:placement:configure"
+                            self.fullPath  = "Editor:Frame:placement:configure:submitPlaceConfig"
+                    def __init__(self):
+                        self.name      = "configure"
+                        self.framePath = "Frame:placement"
+                        self.fullPath  = "Editor:Frame:placement:configure"
+                        self.placeConfigKey = AutoGen.Editor.Frame.placement.configure.placeConfigKey()
+                        self.placeConfigValue = AutoGen.Editor.Frame.placement.configure.placeConfigValue()
+                        self.submitPlaceConfig = AutoGen.Editor.Frame.placement.configure.submitPlaceConfig()
+                class label_x(object):
+                    def __init__(self):
+                        self.name      = "label_x"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:label_x"
+                class label_y(object):
+                    def __init__(self):
+                        self.name      = "label_y"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:label_y"
+                class label_width(object):
+                    def __init__(self):
+                        self.name      = "label_width"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:label_width"
+                class label_height(object):
+                    def __init__(self):
+                        self.name      = "label_height"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:label_height"
+                class entry_x(object):
+                    def __init__(self):
+                        self.name      = "entry_x"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:entry_x"
+                class entry_y(object):
+                    def __init__(self):
+                        self.name      = "entry_y"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:entry_y"
+                class entry_width(object):
+                    def __init__(self):
+                        self.name      = "entry_width"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:entry_width"
+                class entry_height(object):
+                    def __init__(self):
+                        self.name      = "entry_height"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:entry_height"
+                class coord_submit(object):
+                    def __init__(self):
+                        self.name      = "coord_submit"
+                        self.framePath = "Frame:placement:Stats"
+                        self.fullPath  = "Editor:Frame:placement:Stats:coord_submit"
+                class placeConfigKey(object):
+                    def __init__(self):
+                        self.name      = "placeConfigKey"
+                        self.framePath = "Frame:placement:configure"
+                        self.fullPath  = "Editor:Frame:placement:configure:placeConfigKey"
+                class placeConfigValue(object):
+                    def __init__(self):
+                        self.name      = "placeConfigValue"
+                        self.framePath = "Frame:placement:configure"
+                        self.fullPath  = "Editor:Frame:placement:configure:placeConfigValue"
+                class submitPlaceConfig(object):
+                    def __init__(self):
+                        self.name      = "submitPlaceConfig"
+                        self.framePath = "Frame:placement:configure"
+                        self.fullPath  = "Editor:Frame:placement:configure:submitPlaceConfig"
+                def __init__(self):
+                    self.name      = "placement"
+                    self.framePath = "Frame"
+                    self.fullPath  = "Editor:Frame:placement"
+                    self.Stats = AutoGen.Editor.Frame.placement.Stats()
+                    self.configure = AutoGen.Editor.Frame.placement.configure()
+                    self.label_x = AutoGen.Editor.Frame.placement.label_x()
+                    self.label_y = AutoGen.Editor.Frame.placement.label_y()
+                    self.label_width = AutoGen.Editor.Frame.placement.label_width()
+                    self.label_height = AutoGen.Editor.Frame.placement.label_height()
+                    self.entry_x = AutoGen.Editor.Frame.placement.entry_x()
+                    self.entry_y = AutoGen.Editor.Frame.placement.entry_y()
+                    self.entry_width = AutoGen.Editor.Frame.placement.entry_width()
+                    self.entry_height = AutoGen.Editor.Frame.placement.entry_height()
+                    self.coord_submit = AutoGen.Editor.Frame.placement.coord_submit()
+                    self.placeConfigKey = AutoGen.Editor.Frame.placement.placeConfigKey()
+                    self.placeConfigValue = AutoGen.Editor.Frame.placement.placeConfigValue()
+                    self.submitPlaceConfig = AutoGen.Editor.Frame.placement.submitPlaceConfig()
+            class reconfig(object):
+                class configKey(object):
+                    def __init__(self):
+                        self.name      = "configKey"
+                        self.framePath = "Frame:reconfig"
+                        self.fullPath  = "Editor:Frame:reconfig:configKey"
+                class configValue(object):
+                    def __init__(self):
+                        self.name      = "configValue"
+                        self.framePath = "Frame:reconfig"
+                        self.fullPath  = "Editor:Frame:reconfig:configValue"
+                class submitConfig(object):
+                    def __init__(self):
+                        self.name      = "submitConfig"
+                        self.framePath = "Frame:reconfig"
+                        self.fullPath  = "Editor:Frame:reconfig:submitConfig"
+                def __init__(self):
+                    self.name      = "reconfig"
+                    self.framePath = "Frame"
+                    self.fullPath  = "Editor:Frame:reconfig"
+                    self.configKey = AutoGen.Editor.Frame.reconfig.configKey()
+                    self.configValue = AutoGen.Editor.Frame.reconfig.configValue()
+                    self.submitConfig = AutoGen.Editor.Frame.reconfig.submitConfig()
+            class InnerFrame(object):
+                def __init__(self):
+                    self.name      = "InnerFrame"
+                    self.framePath = "Frame"
+                    self.fullPath  = "Editor:Frame:InnerFrame"
+            class label_x(object):
+                def __init__(self):
+                    self.name      = "label_x"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:label_x"
+            class label_y(object):
+                def __init__(self):
+                    self.name      = "label_y"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:label_y"
+            class label_width(object):
+                def __init__(self):
+                    self.name      = "label_width"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:label_width"
+            class label_height(object):
+                def __init__(self):
+                    self.name      = "label_height"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:label_height"
+            class entry_x(object):
+                def __init__(self):
+                    self.name      = "entry_x"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:entry_x"
+            class entry_y(object):
+                def __init__(self):
+                    self.name      = "entry_y"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:entry_y"
+            class entry_width(object):
+                def __init__(self):
+                    self.name      = "entry_width"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:entry_width"
+            class entry_height(object):
+                def __init__(self):
+                    self.name      = "entry_height"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:entry_height"
+            class coord_submit(object):
+                def __init__(self):
+                    self.name      = "coord_submit"
+                    self.framePath = "Frame:placement:Stats"
+                    self.fullPath  = "Editor:Frame:placement:Stats:coord_submit"
+            class placeConfigKey(object):
+                def __init__(self):
+                    self.name      = "placeConfigKey"
+                    self.framePath = "Frame:placement:configure"
+                    self.fullPath  = "Editor:Frame:placement:configure:placeConfigKey"
+            class placeConfigValue(object):
+                def __init__(self):
+                    self.name      = "placeConfigValue"
+                    self.framePath = "Frame:placement:configure"
+                    self.fullPath  = "Editor:Frame:placement:configure:placeConfigValue"
+            class submitPlaceConfig(object):
+                def __init__(self):
+                    self.name      = "submitPlaceConfig"
+                    self.framePath = "Frame:placement:configure"
+                    self.fullPath  = "Editor:Frame:placement:configure:submitPlaceConfig"
+            class configKey(object):
+                def __init__(self):
+                    self.name      = "configKey"
+                    self.framePath = "Frame:reconfig"
+                    self.fullPath  = "Editor:Frame:reconfig:configKey"
+            class configValue(object):
+                def __init__(self):
+                    self.name      = "configValue"
+                    self.framePath = "Frame:reconfig"
+                    self.fullPath  = "Editor:Frame:reconfig:configValue"
+            class submitConfig(object):
+                def __init__(self):
+                    self.name      = "submitConfig"
+                    self.framePath = "Frame:reconfig"
+                    self.fullPath  = "Editor:Frame:reconfig:submitConfig"
+            def __init__(self):
+                self.name      = "Frame"
+                self.framePath = ""
+                self.fullPath  = "Editor:Frame"
+                self.ItemSelection = AutoGen.Editor.Frame.ItemSelection()
+                self.placement = AutoGen.Editor.Frame.placement()
+                self.reconfig = AutoGen.Editor.Frame.reconfig()
+                self.InnerFrame = AutoGen.Editor.Frame.InnerFrame()
+                self.label_x = AutoGen.Editor.Frame.label_x()
+                self.label_y = AutoGen.Editor.Frame.label_y()
+                self.label_width = AutoGen.Editor.Frame.label_width()
+                self.label_height = AutoGen.Editor.Frame.label_height()
+                self.entry_x = AutoGen.Editor.Frame.entry_x()
+                self.entry_y = AutoGen.Editor.Frame.entry_y()
+                self.entry_width = AutoGen.Editor.Frame.entry_width()
+                self.entry_height = AutoGen.Editor.Frame.entry_height()
+                self.coord_submit = AutoGen.Editor.Frame.coord_submit()
+                self.placeConfigKey = AutoGen.Editor.Frame.placeConfigKey()
+                self.placeConfigValue = AutoGen.Editor.Frame.placeConfigValue()
+                self.submitPlaceConfig = AutoGen.Editor.Frame.submitPlaceConfig()
+                self.configKey = AutoGen.Editor.Frame.configKey()
+                self.configValue = AutoGen.Editor.Frame.configValue()
+                self.submitConfig = AutoGen.Editor.Frame.submitConfig()
+        def __init__(self):
+            self.name      = "Editor"
+            self.framePath = ""
+            self.fullPath  = "Editor"
+            self.Frame = AutoGen.Editor.Frame()
     def __init__(self, tkApp):
-        # NAMES
-        self.tkEditorNewObject_0_name = 'tkEditorNewObject_0'
-        self.windowSelection_name     = 'windowSelection'
-        self.framePathSelection_name  = 'framePathSelection'
-        self.itemSelection_name       = 'itemSelection'
-        self.snapGridSlider_name      = 'snapGridSlider'
-        self.windowSelection_name     = 'windowSelection'
-        self.framePathSelection_name  = 'framePathSelection'
-        self.itemSelection_name       = 'itemSelection'
-        self.label_x_name             = 'label_x'
-        self.label_y_name             = 'label_y'
-        self.label_width_name         = 'label_width'
-        self.label_height_name        = 'label_height'
-        self.entry_x_name             = 'entry_x'
-        self.entry_y_name             = 'entry_y'
-        self.entry_width_name         = 'entry_width'
-        self.entry_height_name        = 'entry_height'
-        self.coord_submit_name        = 'coord_submit'
-        self.placeConfigKey_name      = 'placeConfigKey'
-        self.placeConfigValue_name    = 'placeConfigValue'
-        self.submitPlaceConfig_name   = 'submitPlaceConfig'
-        self.configKey_name           = 'configKey'
-        self.configValue_name         = 'configValue'
-        self.submitConfig_name        = 'submitConfig'
-        
-        # WINDOW PATHS
-        self.tkEditorNewObject_0_windowPath = '.'
-        self.windowSelection_windowPath     = 'Editor'
-        self.framePathSelection_windowPath  = 'Editor'
-        self.itemSelection_windowPath       = 'Editor'
-        self.snapGridSlider_windowPath      = 'Editor'
-        self.label_x_windowPath             = 'Editor'
-        self.label_y_windowPath             = 'Editor'
-        self.label_width_windowPath         = 'Editor'
-        self.label_height_windowPath        = 'Editor'
-        self.entry_x_windowPath             = 'Editor'
-        self.entry_y_windowPath             = 'Editor'
-        self.entry_width_windowPath         = 'Editor'
-        self.entry_height_windowPath        = 'Editor'
-        self.coord_submit_windowPath        = 'Editor'
-        self.placeConfigKey_windowPath      = 'Editor'
-        self.placeConfigValue_windowPath    = 'Editor'
-        self.submitPlaceConfig_windowPath   = 'Editor'
-        self.configKey_windowPath           = 'Editor'
-        self.configValue_windowPath         = 'Editor'
-        self.submitConfig_windowPath        = 'Editor'
-        
-        # FRAME PATHS
-        self.tkEditorNewObject_0_framePath = 'Frame'
-        self.windowSelection_framePath     = 'Frame:ItemSelection'
-        self.framePathSelection_framePath  = 'Frame:ItemSelection'
-        self.itemSelection_framePath       = 'Frame:ItemSelection'
-        self.snapGridSlider_framePath      = 'Frame'
-        self.label_x_framePath             = 'Frame:placement:Stats'
-        self.label_y_framePath             = 'Frame:placement:Stats'
-        self.label_width_framePath         = 'Frame:placement:Stats'
-        self.label_height_framePath        = 'Frame:placement:Stats'
-        self.entry_x_framePath             = 'Frame:placement:Stats'
-        self.entry_y_framePath             = 'Frame:placement:Stats'
-        self.entry_width_framePath         = 'Frame:placement:Stats'
-        self.entry_height_framePath        = 'Frame:placement:Stats'
-        self.coord_submit_framePath        = 'Frame:placement:Stats'
-        self.placeConfigKey_framePath      = 'Frame:placement:configure'
-        self.placeConfigValue_framePath    = 'Frame:placement:configure'
-        self.submitPlaceConfig_framePath   = 'Frame:placement:configure'
-        self.configKey_framePath           = 'Frame:reconfig'
-        self.configValue_framePath         = 'Frame:reconfig'
-        self.submitConfig_framePath        = 'Frame:reconfig'
-        
-        # FULL PATHS
-        self.tkEditorNewObject_0_fullPath = '.:Frame:tkEditorNewObject_0'
-        self.windowSelection_fullPath     = 'Editor:Frame:ItemSelection:windowSelection'
-        self.framePathSelection_fullPath  = 'Editor:Frame:ItemSelection:framePathSelection'
-        self.itemSelection_fullPath       = 'Editor:Frame:ItemSelection:itemSelection'
-        self.snapGridSlider_fullPath      = 'Editor:Frame:snapGridSlider'
-        self.label_x_fullPath             = 'Editor:Frame:placement:Stats:label_x'
-        self.label_y_fullPath             = 'Editor:Frame:placement:Stats:label_y'
-        self.label_width_fullPath         = 'Editor:Frame:placement:Stats:label_width'
-        self.label_height_fullPath        = 'Editor:Frame:placement:Stats:label_height'
-        self.entry_x_fullPath             = 'Editor:Frame:placement:Stats:entry_x'
-        self.entry_y_fullPath             = 'Editor:Frame:placement:Stats:entry_y'
-        self.entry_width_fullPath         = 'Editor:Frame:placement:Stats:entry_width'
-        self.entry_height_fullPath        = 'Editor:Frame:placement:Stats:entry_height'
-        self.coord_submit_fullPath        = 'Editor:Frame:placement:Stats:coord_submit'
-        self.placeConfigKey_fullPath      = 'Editor:Frame:placement:configure:placeConfigKey'
-        self.placeConfigValue_fullPath    = 'Editor:Frame:placement:configure:placeConfigValue'
-        self.submitPlaceConfig_fullPath   = 'Editor:Frame:placement:configure:submitPlaceConfig'
-        self.configKey_fullPath           = 'Editor:Frame:reconfig:configKey'
-        self.configValue_fullPath         = 'Editor:Frame:reconfig:configValue'
-        self.submitConfig_fullPath        = 'Editor:Frame:reconfig:submitConfig'
-        
-        # GET ITEMS
-        self.tkEditorNewObject_0 = tkApp.getItemFromWindow(self.tkEditorNewObject_0_windowPath, self.tkEditorNewObject_0_framePath, self.tkEditorNewObject_0_name)
-        self.windowSelection     = tkApp.getItemFromWindow(self.windowSelection_windowPath, self.windowSelection_framePath, self.windowSelection_name)
-        self.framePathSelection  = tkApp.getItemFromWindow(self.framePathSelection_windowPath, self.framePathSelection_framePath, self.framePathSelection_name)
-        self.itemSelection       = tkApp.getItemFromWindow(self.itemSelection_windowPath, self.itemSelection_framePath, self.itemSelection_name)
-        self.snapGridSlider      = tkApp.getItemFromWindow(self.snapGridSlider_windowPath, self.snapGridSlider_framePath, self.snapGridSlider_name)
-        self.windowSelection     = tkApp.getItemFromWindow(self.windowSelection_windowPath, self.windowSelection_framePath, self.windowSelection_name)
-        self.framePathSelection  = tkApp.getItemFromWindow(self.framePathSelection_windowPath, self.framePathSelection_framePath, self.framePathSelection_name)
-        self.itemSelection       = tkApp.getItemFromWindow(self.itemSelection_windowPath, self.itemSelection_framePath, self.itemSelection_name)
-        self.label_x             = tkApp.getItemFromWindow(self.label_x_windowPath, self.label_x_framePath, self.label_x_name)
-        self.label_y             = tkApp.getItemFromWindow(self.label_y_windowPath, self.label_y_framePath, self.label_y_name)
-        self.label_width         = tkApp.getItemFromWindow(self.label_width_windowPath, self.label_width_framePath, self.label_width_name)
-        self.label_height        = tkApp.getItemFromWindow(self.label_height_windowPath, self.label_height_framePath, self.label_height_name)
-        self.entry_x             = tkApp.getItemFromWindow(self.entry_x_windowPath, self.entry_x_framePath, self.entry_x_name)
-        self.entry_y             = tkApp.getItemFromWindow(self.entry_y_windowPath, self.entry_y_framePath, self.entry_y_name)
-        self.entry_width         = tkApp.getItemFromWindow(self.entry_width_windowPath, self.entry_width_framePath, self.entry_width_name)
-        self.entry_height        = tkApp.getItemFromWindow(self.entry_height_windowPath, self.entry_height_framePath, self.entry_height_name)
-        self.coord_submit        = tkApp.getItemFromWindow(self.coord_submit_windowPath, self.coord_submit_framePath, self.coord_submit_name)
-        self.placeConfigKey      = tkApp.getItemFromWindow(self.placeConfigKey_windowPath, self.placeConfigKey_framePath, self.placeConfigKey_name)
-        self.placeConfigValue    = tkApp.getItemFromWindow(self.placeConfigValue_windowPath, self.placeConfigValue_framePath, self.placeConfigValue_name)
-        self.submitPlaceConfig   = tkApp.getItemFromWindow(self.submitPlaceConfig_windowPath, self.submitPlaceConfig_framePath, self.submitPlaceConfig_name)
-        self.configKey           = tkApp.getItemFromWindow(self.configKey_windowPath, self.configKey_framePath, self.configKey_name)
-        self.configValue         = tkApp.getItemFromWindow(self.configValue_windowPath, self.configValue_framePath, self.configValue_name)
-        self.submitConfig        = tkApp.getItemFromWindow(self.submitConfig_windowPath, self.submitConfig_framePath, self.submitConfig_name)
+        self.Main = AutoGen.Main()
+        self.ItemWindow = AutoGen.ItemWindow()
+        self.Editor = AutoGen.Editor()
+        self.placeConfigKey_framePath    = self.Editor.Frame.placement.configure.placeConfigKey.framePath
+        self.placeConfigKey_fullPath     = self.Editor.Frame.placement.configure.placeConfigKey.fullPath
+        self.placeConfigKey_windowName   = 'Editor'
+        self.placeConfigKey_name         = 'placeConfigKey'
+        self.placeConfigKey_Tk           = tkApp.getItemFromWindow(self.placeConfigKey_windowName, self.placeConfigKey_framePath, self.placeConfigKey_name)

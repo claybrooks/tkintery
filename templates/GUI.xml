@@ -53,7 +53,7 @@
                     <Button background="SystemButtonFace" height="30" name="coord_submit" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" text="Submit" width="107" x="16" y="100" />
                 </Frame>
                 <Frame height="134" name="configure" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" width="135" x="126" y="4">
-                    <Entry height="25" name="placeConfigKey" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" width="135" x="0" y="10" />
+                    <Entry height="25" name="placeConfigKey" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" width="135" x="0" y="10" codeName="placeConfigKey" />
                     <Entry height="25" name="placeConfigValue" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" width="134" x="2" y="42" />
                     <Button height="30" name="submitPlaceConfig" relheight="0.0" relwidth="0.0" relx="0.0" rely="0.0" text="Submit" width="130" x="2" y="102" />
                 </Frame>

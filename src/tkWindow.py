@@ -33,7 +33,7 @@ class tkWindow(object):
     #------------------------------------------------------------------------------------------------------------------
     # getPath
     #__________________________________________________________________________________________________________________
-    def getFullPath(self):
+    def getFullPath(self, delim=':'):
         return self._name
     
     #------------------------------------------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ class tkWindow(object):
         items = []
 
         # iterate through each frame we have
-        for key,value in self._dictTkFrames.items():
+        for value in self._dictTkFrames.values():
             items.extend(value.getAllItems())
 
         return items

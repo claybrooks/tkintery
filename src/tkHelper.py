@@ -104,9 +104,9 @@ class tkHelper(object):
         framePath = ':'.join(tokens[1:-1])
 
         tkHelper.writeLine(tabSpace*(level+1) + f'def __init__(self):', f)
-        tkHelper.writeLine(tabSpace*(level+2) + f'_name      = "{name}"', f)
-        tkHelper.writeLine(tabSpace*(level+2) + f'_framePath = "{framePath}"', f)
-        tkHelper.writeLine(tabSpace*(level+2) + f'_fullPath  = "{fullPath}"', f)
+        tkHelper.writeLine(tabSpace*(level+2) + f'self.name      = "{name}"', f)
+        tkHelper.writeLine(tabSpace*(level+2) + f'self.framePath = "{framePath}"', f)
+        tkHelper.writeLine(tabSpace*(level+2) + f'self.fullPath  = "{fullPath}"', f)
         
     #------------------------------------------------------------------------------------------------------------------
     # generateCodeFromItem
@@ -115,7 +115,6 @@ class tkHelper(object):
     def generateCodeFromItem(item, f, level):
         tkHelper.generateClass(item, f, level)
         tkHelper.generateInit(item, f, level)
-        tkHelper.writeLine(tabSpace*(level) + f'self.{item._name}: {item._name}()', f)
 
     #------------------------------------------------------------------------------------------------------------------
     # generateCodeFromFrame
@@ -125,17 +124,21 @@ class tkHelper(object):
         
         tkHelper.generateClass(frame, f, level)
 
-        for key,child in frame.getFrames().items():
+        for child in frame.getFrames().values():
             tkHelper.generateCodeFromFrame(child, f, level+1)
-        
-        tkHelper.generateInit(frame, f, level)
 
         # now put all of our items in the init
         for item in frame.getItems():
             tkHelper.generateCodeFromItem(item, f, level+1)
-            
-        for key,frame in frame.getFrames().items():
-            tkHelper.writeLine(tabSpace*(level+1) + f'self.{frame._name}: {frame._name}()', f)
+        
+        tkHelper.generateInit(frame, f, level)
+
+        parentClassPath = 'AutoGen.'+frame.getFullPath(delim='.')
+        for childFrame in frame.getFrames().values():
+            tkHelper.writeLine(tabSpace*(level+1+1) + f'self.{childFrame._name} = {parentClassPath}.{childFrame._name}()', f)
+
+        for item in frame.getItems():
+            tkHelper.writeLine(tabSpace*(level+1+1) + f'self.{item._name} = {parentClassPath}.{item._name}()', f)
 
     #------------------------------------------------------------------------------------------------------------------
     # generateCodeFromWindow
@@ -149,10 +152,10 @@ class tkHelper(object):
         for key,frame in window.getFrames().items():
             tkHelper.generateCodeFromFrame(frame, f, level+1)
 
-        for key,frame in window.getFrames().items():
-            tkHelper.writeLine(tabSpace*(level+1) + f'self.{frame._name}: {frame._name}()', f)
-
         tkHelper.generateInit(window, f, level)
+
+        for key,frame in window.getFrames().items():
+            tkHelper.writeLine(tabSpace*(level+1+1) + f'self.{frame._name} = AutoGen.{window._name}.{frame._name}()', f)
 
     #------------------------------------------------------------------------------------------------------------------
     # generateCodeFromApplication
@@ -160,7 +163,7 @@ class tkHelper(object):
     @staticmethod
     def generateCodeFromApplication(tkApp):
 
-        with open ('Trigger.py', 'w+') as f:
+        with open ('src/GUI_Autogen.py', 'w+') as f:
             tkHelper.writeLine('class AutoGen(object):', f)
             
             level = 1
@@ -173,21 +176,22 @@ class tkHelper(object):
 
             # iterate over each window in our application and instantiate the window object
             for key,window in tkApp.getWindows().items():
-                tkHelper.writeLine(tabSpace*(level+1) + f'{window._name}: {window._name}()', f) 
+                tkHelper.writeLine(tabSpace*(level+1) + f'self.{window._name} = AutoGen.{window._name}()', f) 
                 
             # now iterate through the windows again, and get the items.  This time, look for items
             # that have _codeName set, and then make the helper code
             for windowKey,window in tkApp.getWindows().items():
-                for item in window.getItems():
+                items = window.getItems()
+                for item in items:
                     if item._codeName != '':
 
-                        fullPathCode    = 'self.' + '.'.join(item.getFullPath().split(':'))     + '_fullPath'
-                        framePathCode   = 'self.' + '.'.join(item.getFramePath().split(':'))    + '_framePath'
+                        fullPathCode    = 'self.' + item.getFullPath(delim='.') + '.fullPath'
+                        framePathCode   = 'self.' + item.getFullPath(delim='.') + '.framePath'
        
                         tkHelper.writeLine(tabSpace*(level+1) + f'self.{item._codeName}_framePath    = {framePathCode}', f)
                         tkHelper.writeLine(tabSpace*(level+1) + f'self.{item._codeName}_fullPath     = {fullPathCode}', f)
-                        tkHelper.writeLine(tabSpace*(level+1) + f'self.{item._codeName}_windowName   = {windowKey}', f)
-                        tkHelper.writeLine(tabSpace*(level+1) + f'self.{item._codeName}_name         = {item._name}', f)
+                        tkHelper.writeLine(tabSpace*(level+1) + f'self.{item._codeName}_windowName   = \'{windowKey}\'', f)
+                        tkHelper.writeLine(tabSpace*(level+1) + f'self.{item._codeName}_name         = \'{item._name}\'', f)
                         tkHelper.writeLine(tabSpace*(level+1) + f'self.{item._codeName}_Tk           = tkApp.getItemFromWindow(self.{item._codeName}_windowName, self.{item._codeName}_framePath, self.{item._codeName}_name)', f)
 
     #------------------------------------------------------------------------------------------------------------------

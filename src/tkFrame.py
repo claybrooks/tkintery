@@ -59,14 +59,14 @@ class tkFrame(tk.Frame):
     #------------------------------------------------------------------------------------------------------------------
     # getFullPath
     #__________________________________________________________________________________________________________________
-    def getFullPath(self):
-        return ':'.join([self._parent.getFullPath(), self._name])
+    def getFullPath(self, delim=':'):
+        return delim.join([self._parent.getFullPath(delim=delim), self._name])
     
     #------------------------------------------------------------------------------------------------------------------
     # getFramePath
     #__________________________________________________________________________________________________________________
-    def getFramePath(self):
-        return self.getFullPath()[1:-1]
+    def getFramePath(self, delim=':'):
+        return delim.join(self.getFullPath(delim).split(delim)[1:-1])
 
     #------------------------------------------------------------------------------------------------------------------
     # getWidth
@@ -275,24 +275,26 @@ class tkFrame(tk.Frame):
             else:
                 print (f'Unknown Frame: "{toplevel}" in frame "{self._name}"')
                 return None
+    
+    # TODO Merge getItems and getAllItems
     #------------------------------------------------------------------------------------------------------------------
     # getItems
     #__________________________________________________________________________________________________________________
     def getItems(self):
-        return [value for key,value in self._dictTkItems.items()]
+
+        items = [x for x in self._dictTkItems.values()]
+
+        for value in self._dictTkFrames.values():
+            items.extend(value.getItems())
+            
+        return items
 
     #------------------------------------------------------------------------------------------------------------------
     # getAllItems
     #__________________________________________________________________________________________________________________
     def getAllItems(self):
 
-        items = self.getItems()
-
-        # iterate through each frame we have
-        for key,value in self._dictTkFrames.items():
-            items.extend(value.getItems())
-
-        return items
+        return self.getItems()
 
     #------------------------------------------------------------------------------------------------------------------
     # loadXML

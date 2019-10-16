@@ -3,8 +3,7 @@ from tkHelper import tkHelper
 from tkHelper import placeData
 
 import tkinter as tk
-#from GUI_Autogen import AutoGen#
-#from Trigger import AutoGen
+from GUI_Autogen import AutoGen as AutoGen
 import configparser
 import os
 
@@ -18,7 +17,7 @@ class tkEditor(object):
         self._tkApp = tkApp
 
         # create our autogen'ed tree structure        
-        self._autogen = AutoGen()
+        self._autogen = AutoGen(tkApp)
 
         # save off some windows
         self._editor = self._autogen.Editor
