@@ -1,351 +1,244 @@
+import json
 import tkinter as tk
-import tkHelper
 
-import xml.etree.ElementTree as ET
-
-from tkWindow import tkWindow
-
-from dynamic_xml.XMLFile import XMLFile
-
-#----------------------------------------------------------------------------------------------------------------------
-# MainApplication
-#______________________________________________________________________________________________________________________
+########################################################################################################################
+#
+########################################################################################################################
 class tkApplication(object):
 
-    MAIN_WINDOW = 'Main'
+    tkObjMap = {
+        'Button':       tk.Button,
+        'Canvas':       tk.Canvas,
+        'Checkbutton':  tk.Checkbutton,
+        'Entry':        tk.Entry,
+        'Frame':        tk.Frame,
+        'Label':        tk.Label,
+        'Listbox':      tk.Listbox,
+        'Menu':         tk.Menu,
+        'Menubutton':   tk.Menubutton,
+        'Message':      tk.Message,
+        'Radiobutton':  tk.Radiobutton,
+        'Scale':        tk.Scale,
+        'Scrollbar':    tk.Scrollbar,
+        'Text':         tk.Text,
+        'Toplevel':     tk.Toplevel,
+        'LabelFrame':   tk.LabelFrame,
+        'PanedWindow':  tk.PanedWindow,
+        'Spinbox':      tk.Spinbox,
+        'OptionMenu':   tk.OptionMenu,
+    }
 
-    def __init__(self, fullPathToFile):
-        # Hold all of the windows of the application
-        self._tkWindows = {}
-
-        # create our tk root
-        self._root = tk.Tk()
-        self._root.geometry("500x500")
-
-        # create our main window
-        self._tkWindows[tkApplication.MAIN_WINDOW] = tkWindow(tk.Frame, tkApplication.MAIN_WINDOW, self._root, self)
-        self._mainWindow = self._tkWindows[tkApplication.MAIN_WINDOW]
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __init__(self, file):
         
-        self._mainWindow._tk.pack(side="top", fill="both", expand=True)
+        # create the root object
+        self._root = None
 
-        self._callbackPaths = {}
-        self._callbackTypes = {}
+        # save off the file
+        self._file = file
 
-        self._updateCallbacks = []
-        self._updateRateInMs = 16
+        # this is our update rate
+        self._updatePeriodInMillis = 30
 
-        self.loadXML(fullPathToFile)
+        # everyone listening for updates
+        self._updateCycleListeners = []
 
-        self._root.after(self._updateRateInMs, self.__HandleUpdate)
+        # menu callbacks
+        self._menuCallbacks = {}
 
+        # load the gui
+        self.loadGUI(file)
 
-    #------------------------------------------------------------------------------------------------------------------
-    # _reportEvent
-    #__________________________________________________________________________________________________________________
-    def _reportEvent(self, windowName, framePath, itemName, *args):
-       
-        # first arg is always the type
-        if len(args) == 0:
+        self._root.after(self._updatePeriodInMillis, self.__process)
+
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def start(self):
+        self._root.mainloop()
+        
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def loadGUI(self, file):
+        
+        if self._root == None:
+            self._root = tk.Tk()
+
+        for child in self._root.winfo_children():
+            child.delete()
+
+        try:
+            with open(file, 'r') as file:
+                config = json.load(file)
+        except Exception as e:
+            print (f'Exception while loading GUI: {e}')
             return
 
-        type = args[0]
+        size="500x500"
+        if 'size' in config.keys():
+            size = config['size']
 
-        if type not in self._callbackTypes.keys():
-            return
+        self._root.geometry(size)
 
-        path = ':'.join([windowName, framePath, itemName])
+        if 'menu' in config:
+            self.__loadMenu(config['menu'])
 
-        # just send the last item for things that match exactly
-        exactPathMessage = path.split(':')[-1]
+        if 'frames' in config:
+            self.__loadFrames(config['frames'])
 
-        callbackType = self._callbackTypes[type]
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def attachToUpdateCycle(self, callback):
+        if callback != None and callback not in self._updateCycleListeners:
+            self._updateCycleListeners.append(callback)
 
-        # process exact matches
-        if path in callbackType.keys():
-            for callback in callbackType[path]:
-                callback(exactPathMessage, *args)
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def attachToUserInput(self, path, callback):
+        try:
+            tkItem = self._root.nametowidget(path)
+            tkItem.config(command=callback)
+        except Exception as e:
+            print (f'Exception attaching to user input: {e}')
 
-        # now we need to process any subsets
-        for key, list in callbackType.items():
-            if path.startswith(key) and path != key and key != '':
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def attachToMenuInput(self, path, callback):
+        try:
+            self._menuCallbacks[path].append(callback)
+        except Exception as e:
+            print (f'Exception attaching to menu input: {e}')
 
-                # strip out the part of the path that the user registered for
-                subsetPathMessage = path[len(key)+1:]
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __process(self):
 
-                for callback in list:
-                    callback(subsetPathMessage, *args)
-            elif key == '':
-                for callback in list:
-                    callback(path, *args)
-        
-    #------------------------------------------------------------------------------------------------------------------
-    # registerToolbarCallback
-    #__________________________________________________________________________________________________________________
-    def registerCallback(self, path, typeFilter, callback):
-
-        if typeFilter not in self._callbackTypes.keys():
-            self._callbackTypes[typeFilter] = {}
-
-        callbackType = self._callbackTypes[typeFilter]
-
-        if path not in callbackType.keys():
-            callbackType[path] = []
-
-        callbackType[path].append(callback)
-       
-    #------------------------------------------------------------------------------------------------------------------
-    # registerToolbarCallback
-    #__________________________________________________________________________________________________________________
-    def registerCallbackFromItem(self, tkItem, typeFilter, callback):
-        
-        # get the tkitems path
-        path = tkItem.getPath()
-
-        self.registerCallback(path, typeFilter, callback)
-
-    #------------------------------------------------------------------------------------------------------------------
-    # registerUpdateCallback
-    #__________________________________________________________________________________________________________________
-    def registerUpdateCallback(self,callback):
-        self._updateCallbacks.append(callback)
-
-    #------------------------------------------------------------------------------------------------------------------
-    # setUpdateRate
-    #__________________________________________________________________________________________________________________
-    def setUpdateRate(self, updateRateInMs):
-        self._updateRateInMs = updateRateInMs
-
-    #------------------------------------------------------------------------------------------------------------------
-    # __HandleUpdate
-    #__________________________________________________________________________________________________________________
-    def __HandleUpdate(self):
-        for callback in self._updateCallbacks:
+        for callback in self._updateCycleListeners:
             callback()
 
-        self._root.after(self._updateRateInMs, self.__HandleUpdate)
-    #------------------------------------------------------------------------------------------------------------------
-    # showWindow
-    #__________________________________________________________________________________________________________________
-    def toggleWindowVisibility(self, windowName):
-        win = self.getWindow(windowName)
+        self._root.after(self._updatePeriodInMillis, self.__process)
 
-        # early out check
-        if win == None:
-            return None
-
-        win.toggleVisibility()
-    #------------------------------------------------------------------------------------------------------------------
-    # open
-    #__________________________________________________________________________________________________________________
-    def open(self):
-        pass
-    
-    #------------------------------------------------------------------------------------------------------------------
-    # getFhelpocus
-    #__________________________________________________________________________________________________________________
-    def help(self):
-        pass
-    
-    #------------------------------------------------------------------------------------------------------------------
-    # exit
-    #__________________________________________________________________________________________________________________
-    def exit(self):
-        pass
-
-    #------------------------------------------------------------------------------------------------------------------
-    # getFocus
-    #__________________________________________________________________________________________________________________
-    def getFocus(self):
-        return self._root.focus_get()
-    
-    #------------------------------------------------------------------------------------------------------------------
-    # getMainWindow
-    #__________________________________________________________________________________________________________________
-    def getMainWindow(self):
-        return self._mainWindow
-    
-    #------------------------------------------------------------------------------------------------------------------
-    # getWindow
-    #__________________________________________________________________________________________________________________
-    def getWindow(self, windowName):
-        if windowName not in self._tkWindows.keys():
-            print (f'Unknown window name: {windowName}')
-            return None
-
-        return self._tkWindows[windowName]
-    
-    #------------------------------------------------------------------------------------------------------------------
-    # getWindows
-    #__________________________________________________________________________________________________________________
-    def getWindows(self):
-        return self._tkWindows
-
-    #------------------------------------------------------------------------------------------------------------------
-    # getNumWindows
-    #__________________________________________________________________________________________________________________
-    def getNumWindows(self):
-        return len(self._tkWindows.keys())
-    
-    #------------------------------------------------------------------------------------------------------------------
-    # getWindowNames
-    #__________________________________________________________________________________________________________________
-    def getWindowNames(self):
-        return self._tkWindows.keys()
-
-    #------------------------------------------------------------------------------------------------------------------
-    # getNumItemsInWindow
-    #__________________________________________________________________________________________________________________
-    def getNumFramesInWindow(self, windowName):
-
-        win = self.getWindow(windowName)
-
-        # early out check
-        if win == None:
-            return None
-
-        return win.getNumFrames()
-
-    #------------------------------------------------------------------------------------------------------------------
-    # getRoot
-    #__________________________________________________________________________________________________________________
-    def getRoot(self):
-        return self._root
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __loadMenu(self, menuConfig):
         
-    #------------------------------------------------------------------------------------------------------------------
-    # addWindow
-    #__________________________________________________________________________________________________________________
-    def addWindow(self):
-        name = f'tkWindow_{self.getNumWindows()}'
-        self._tkWindows[name] = tkWindow(tk.Toplevel, name, self._root, self)
-   
-    #------------------------------------------------------------------------------------------------------------------
-    # getFrameFromWindow
-    #__________________________________________________________________________________________________________________
-    def getFrameFromWindow(self, windowName, framePath):
-        
-        win = self.getWindow(windowName)
+        name = menuConfig['name']
 
-        # early out check
-        if win == None:
-            return None
+        self._menubar = tk.Menu(self._root, name=name)
 
-        return win.getFrame(framePath)
-    
-    #------------------------------------------------------------------------------------------------------------------
-    # getFramesFromWindow
-    #__________________________________________________________________________________________________________________
-    def getFramesFromWindow(self, windowName):
+        if 'tabs' in menuConfig.keys():
+            self.__loadMenuTabs(menuConfig['tabs'], self._menubar)
 
-        win = self.getWindow(windowName)
+        self._root.config(menu=self._menubar)
 
-        if win == None:
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __loadMenuTabs(self, menuTabConfig, root=None):
+
+        if root == None:
+            root = self._menubar
+
+        for tabEntry, tabConfig in menuTabConfig.items():
+            print (f'Processing Menu Tab: {tabEntry}')
+
+            name = tabConfig['name']
+            menu = tk.Menu(self._menubar, tearoff=0, name=name)
+
+            if 'entries' in tabConfig.keys():
+                self.__loadTabEntries(tabConfig['entries'], menu)
+
+            root.add_cascade(label=tabEntry, menu=menu)
+
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __loadTabEntries(self, entries, menu):
+
+        for entry in entries:
+            name = '.'.join(self.__getName(menu))
+            name = name+'.'+entry
+
+            if name not in self._menuCallbacks.keys():
+                self._menuCallbacks[name] = []
+                
+            callable = lambda name=name: self.__menuCommandCallback(name)
+            menu.add_command(label=entry, command=callable)
+
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __getName(self, tkItem):
+        if tkItem.master == None:
             return []
 
-        return win.getFrames()
+        parentTokens = self.__getName(tkItem.master)
+        parentTokens.append(tkItem._name)
 
-    #------------------------------------------------------------------------------------------------------------------
-    # addFrameToWindow
-    #__________________________________________________________________________________________________________________
-    def addFrameToWindow(self, windowName, framePath, pos):
+        return parentTokens
+
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __menuCommandCallback(self, name, *args, **kwargs):
+        if name in self._menuCallbacks.keys():
+            for callback in self._menuCallbacks[name]:
+                callback()
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __loadFrames(self, framesConfig, root=None):
         
-        win = self.getWindow(windowName)
+        if root == None:
+            root = self._root
 
-        # early out check
-        if win == None:
-            return False
+        for frameName, frameConfig in framesConfig.items():
+            print (f'Loading Frame: {frameName}')
 
-        # add the item to the window
-        return win.addFrame(framePath, pos)
+            frame = tk.Frame(root, name=frameName)
+
+            if 'location' in frameConfig.keys():
+                frame.place(**frameConfig['location'])
+
+            if 'config' in frameConfig.keys():
+                frame.config(**frameConfig['config'])
+
+            if 'items' in frameConfig.keys():
+                self.__loadItems(frameConfig['items'], frame)
+
+            if 'frames' in frameConfig.keys():
+                self.__loadFrames(frameConfig['frames'], frame)
+            
+
+    ####################################################################################################################
+    #
+    ####################################################################################################################
+    def __loadItems(self, itemsConfig, root=None):
         
-    #------------------------------------------------------------------------------------------------------------------
-    # configureFrameInWindow
-    #__________________________________________________________________________________________________________________
-    def configureFrameInWindow(self, windowName, framePath, key, value):
-        win = self.getWindow(windowName)
+        if root == None:
+            root = self._root
 
-        if win == None:
-            return
+        for itemType, itemConfig in itemsConfig.items():
+            
+            name = itemConfig['name']
+            
+            print (f'Loading Item: {name}')
 
-        win.configureFrame(framePath, key, value)
-        
-    #------------------------------------------------------------------------------------------------------------------
-    # getItemFromWindow
-    #__________________________________________________________________________________________________________________
-    def getItemFromWindow(self, windowName, framePath, itemName):
+            if itemType not in tkApplication.tkObjMap.keys():
+                print (f'Invalid Type: {name}:{itemType}')
 
-        win = self.getWindow(windowName)
+            tkItem = tkApplication.tkObjMap[itemType](root, name=name)
 
-        if win == None:
-            return None
+            if 'config' in itemConfig.keys():
+                tkItem.config(**itemConfig['config'])
 
-        return win.getItem(framePath, itemName)
-        
-    #------------------------------------------------------------------------------------------------------------------
-    # getMenubar
-    #__________________________________________________________________________________________________________________
-    def getMenubar(self, windowName):
-         
-        win = self.getWindow(windowName)
-        
-        if win == None:
-            return None
-
-        return win.getMenubar()
-         
-    #------------------------------------------------------------------------------------------------------------------
-    # getItemsFromWindow
-    #__________________________________________________________________________________________________________________
-    def getItemsFromWindow(self, windowName):
-
-        win = self.getWindow(windowName)
-
-        if win == None:
-            return
-
-        return win.getItems()
-
-    #------------------------------------------------------------------------------------------------------------------
-    # loadXML
-    #__________________________________________________________________________________________________________________
-    def loadXML(self, fullPathToFile):
-        self.__xml = XMLFile(fullPathToFile, 'src/XML/Root.json')
-
-        #tree = ET.parse(fullPathToFile)
-        root = self.__xml.getRoot()
-
-        # run through the window list
-       # windows = root.findall('Window')
-
-        #for window in windows:
-        for window in root.getWindows():
-            '''name = window.get('name')
-            xsize = int(window.get('xsize'))
-            ysize = int(window.get('ysize'))'''
-            name = window.getAttributeName()
-            xsize = int(window.getAttributeXsize())
-            ysize = int(window.getAttributeYsize())
-
-            if name == tkApplication.MAIN_WINDOW:
-                tkW = self._mainWindow
-            else:
-                self._tkWindows[name] = tkWindow(tk.Toplevel, name, self._root, self)
-                tkW = self._tkWindows[name]
-
-            tkW.loadXML(window, name, xsize, ysize)
-
-    #------------------------------------------------------------------------------------------------------------------
-    # saveXML
-    #__________________________________________________________________________________________________________________
-    def saveXML(self):
-        # create our root element
-        root = ET.Element('root')
-
-        # now, iterate over each window and ask them to save
-        for _, window in self._tkWindows.items():
-            window.saveXML(root)
-
-        # get the tree
-        tkHelper.indent(root)
-        tree = ET.ElementTree(root)
-
-        tree.write('GUI.xml')
+            if 'location' in itemConfig.keys():
+                tkItem.place(**itemConfig['location'])

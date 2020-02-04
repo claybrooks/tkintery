@@ -9,25 +9,9 @@
             "name": "Python: GUI.py",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}\\src\\GUI.py",
+            "program": "${workspaceFolder}/GUI.py",
             "console": "integratedTerminal",
-            "args": ["--guiConfig", "templates/GUI.xml"]
-        },
-        {
-            "name": "Python: GUI.py Generate",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}\\src\\GUI.py",
-            "console": "integratedTerminal",
-            "args": ["--guiConfig", "templates/GUI.xml", "--generateCode"]
-        }
-        {
-            "name": "Python: GUI.py Editing",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}\\src\\GUI.py",
-            "console": "integratedTerminal",
-            "args": ["--guiConfig", "templates/GUI.xml", "--enableEditing"]
+            "args": ["--guiConfig", "sample.json"]
         }
     ]
 }
