@@ -1,4 +1,4 @@
-from src.tkApplication import tkApplication
+from application.application import Application
 
 import argparse
 import os
@@ -8,10 +8,10 @@ import sys
 #
 ########################################################################################################################
 def runApp(args):
-    app = tkApplication(args.guiConfig)
+    app = Application(args.guiConfig)
 
-    app.attachToUserInput('main.mainButton', onMainButtonPushed)
-    app.attachToMenuInput('mainMenu.file.Open', onFileOpenClicked)
+    app.attachToUserInput('mainWindow.mainFrame.mainButton', onMainButtonPushed)
+    app.attachToUserInput('secondWindow.mainFrame.mainButton', onMainButtonPushed)
 
     # now run our app
     app.start()
